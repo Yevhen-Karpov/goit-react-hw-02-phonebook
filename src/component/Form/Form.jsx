@@ -14,14 +14,14 @@ export default class Form extends Component {
     const { name, number } = this.state;
     e.preventDefault();
     this.props.onSubmit(name, number);
-    this.reset();
+    this.resetState();
   };
-  reset() {
+  resetState = () => {
     this.setState({
       name: '',
       number: '',
     });
-  }
+  };
 
   render() {
     return (

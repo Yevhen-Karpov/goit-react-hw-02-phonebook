@@ -16,15 +16,17 @@ export default class App extends Component {
 
   addContact = (name, number) => {
     const { contacts } = this.state;
+
+    if (contacts.find(contact => contact.name === name)) {
+      alert(`${name} is already in contacts.`);
+      return;
+    }
+
     const newContact = {
       id: uuidv4(),
       name,
       number,
     };
-    if (contacts.find(contact => contact.name === newContact.name)) {
-      alert(`${newContact.name} is already in contacts.`);
-      return;
-    }
 
     this.setState(({ contacts }) => ({
       contacts: [newContact, ...contacts],
@@ -53,7 +55,6 @@ export default class App extends Component {
   render() {
     const { filter } = this.state;
     const visibleContacts = this.getVisibleContacts();
-
     return (
       <>
         <h1>Phonebook</h1>
