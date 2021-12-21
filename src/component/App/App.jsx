@@ -3,11 +3,32 @@ import { v4 as uuidv4 } from 'uuid';
 import ContactList from '../ContactList/ContactList';
 import Form from '../Form/Form';
 import Filter from '../Filter/Filter';
+
 export default class App extends Component {
   state = {
     contacts: [],
     filter: '',
   };
+
+  #localstorageKey = 'contacts';
+
+  componentDidMount() {
+    const parsedContacts = JSON.parse(
+      localStorage.getItem(this.#localstorageKey),
+    );
+
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem(
+        this.#localstorageKey,
+        JSON.stringify(this.state.contacts),
+      );
+    }
+  }
 
   addContact = (name, number) => {
     const { contacts } = this.state;
@@ -46,18 +67,7 @@ export default class App extends Component {
       contacts: prevState.contacts.filter(contact => contact.id !== contactId),
     }));
   };
-  componentDidMount() {
-    const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
 
-    if (parsedContacts) {
-      this.setState({ contacts: parsedContacts });
-    }
-  }
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    }
-  }
   render() {
     const { filter } = this.state;
     const visibleContacts = this.getVisibleContacts();
